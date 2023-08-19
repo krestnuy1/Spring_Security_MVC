@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <title></title>
+</head>
+<body>
+<h2 th:text="${thisUser.firstname} + ' this is your admin page!'"></h2>
+<h3>You can add, change and delete users</h3>
+
+
+<form action="/user" method="get">
+    <button type="submit">Go to my own Page</button>
+</form>
+
+<table class="zebra-table">
+
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Settings</th>
+    </tr>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.firstname}"></td>
+        <td th:text="${user.lastname}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:style="'display: flex; gap: 3px;'">
+            <form th:action="@{admin/deleteUser}" method="post">
+                <input type="hidden" name="userID" th:value="${user.id}"/>
+                <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{admin/updateUser}" method="get">
+                <input type="hidden" name="userID" th:value="${user.id}"/>
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    </tr>
+    <br>
+</table>
+<form action="admin/add" method="get">
+    <button type="submit">Add user</button>
+</form>
+<br>
+<br>
+<form action="/logout" method="get">
+    <button type="submit">logout</button>
+</form>
+</body>
+</html>

@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<h1 th:text="${user.firstname} + ' this is your informational page!'"></h1>
+<br>
+<div th:if="${roles.contains('ROLE_ADMIN')}">
+    <form action="/admin" method="get">
+        <button type="submit">Go to Admin Page</button>
+    </form>
+</div>
 
 
+</th:block>
+<br>
+<h4 th:text="'Name:' + ${user.firstname}"></h4>
+<h4 th:text="'Lastname:' + ${user.lastname}"></h4>
+<h4 th:text="'Age:' + ${user.age}"></h4>
+<h4 th:text="'Email:' + ${user.email}"></h4>
+
+<form th:action="@{user/deleteUser}" method="post">
+    <input type="hidden" name="userID" th:value="${user.id}"/>
+    <button type="submit">Delete</button>
+</form>
+<br>
+<form th:action="@{user/updateUser}" method="get">
+    <input type="hidden" name="userID" th:value="${user.id}"/>
+    <button type="submit">Update</button>
+</form>
+</td>
+</tr>
+<br>
+<br>
+<form action="/logout" method="get">
+    <button type="submit">logout</button>
+</form>
 </body>
 </html>

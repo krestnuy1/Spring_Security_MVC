@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление нового пользователя</title>
+</head>
+<body>
+<h2>User information</h2>
+<ul>
+    <li th:each="role : ${userRoles}" th:text="${role.getName()}"></li>
+</ul>
+<form th:method="post" th:action="@{/user}" th:object="${user}">
+    <label for="username">Username</label>
+    <input type="text" th:field="*{username}" id="username">
+    <br>
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password">
+    <br>
+    <input type="hidden" th:field="*{id}"/>
+    <label for="firstname">Name</label>
+    <input type="text" th:field="*{firstname}" id="firstname">
+    <br>
+    <label for="secondname">Surname</label>
+    <input type="text" th:field="*{lastname}" id="secondname">
+    <br>
+    <label for="age">Age</label>
+    <input type="text" th:field="*{age}" id="age">
+    <br>
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email">
+
+    <br>
+    <input type="hidden" name="selectedRoleIds" th:value="${selectedRoleIds}" />
+    <label for="selectedRoles">Roles</label>
+    <select id="selectedRoles" name="selectedRoles" multiple="multiple" th:if="${canChangeRoles}">
+        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.getName()}"
+                th:selected="${userRoles.contains(role.id)}"></option>
+    </select>
+    <input type="submit" value="OK"/>
+<!--    <label for="selectedRoles">Roles</label>-->
+<!--    <select th:field="*{roles}" id="selectedRoles" name="selectedRoles" multiple="multiple" th:if="${canChangeRoles}">-->
+<!--        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.getName()}"-->
+<!--                th:selected="${user.roles.contains(role)}"></option>-->
+<!--    </select>-->
+<!--    <div th:unless="${canChangeRoles}">-->
+<!--        <p>Current roles:</p>-->
+<!--        <ul>-->
+<!--            <li th:each="role : ${userRoles}" th:text="${role.getName()}"></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+    <br>
+
+
+</form>
+</body>
+</html>

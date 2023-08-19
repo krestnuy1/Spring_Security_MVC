@@ -9,9 +9,6 @@ import ru.katsevich.spring.boot_security.entities.Role;
 import ru.katsevich.spring.boot_security.entities.User;
 import ru.katsevich.spring.boot_security.repository.RoleRepository;
 import ru.katsevich.spring.boot_security.repository.UserRepository;
-
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

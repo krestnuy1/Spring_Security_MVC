@@ -7,8 +7,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.katsevich.spring.boot_security.entities.Role;
 import ru.katsevich.spring.boot_security.entities.User;
-import ru.katsevich.spring.boot_security.repository.RoleRepository;
-import ru.katsevich.spring.boot_security.repository.UserRepository;
+import ru.katsevich.spring.boot_security.services.RoleService;
+import ru.katsevich.spring.boot_security.services.UserService;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,30 +18,29 @@ import java.util.Set;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private RoleRepository roleRepository;
-    private UserRepository userRepository;
+    private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
-
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @RequestMapping("add")
     public String addUser(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("allRoles", roleRepository.findAll());
+        model.addAttribute("allRoles", roleService.findAll());
         return "addOrUpdateUser";
     }
 
 
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam("userID") Long id) {
-        userRepository.deleteById(id);
+        userService.deleteById(id);
         return "redirect:/admin";
     }
 
@@ -50,19 +50,19 @@ public class AdminController {
                                   @RequestParam("selectedRoles") List<Long> selectedRoleIds,
                                   Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("allRoles", roleRepository.findAll());
+            model.addAttribute("allRoles", roleService.findAll());
             return "addOrUpdateUser";
         }
         Set<Role> selectedRoles = new HashSet<>();
         for (Long roleId : selectedRoleIds) {
-            Role role = roleRepository.findById(roleId).orElse(null);
+            Role role = roleService.findById(roleId).orElse(null);
             if (role != null) {
                 selectedRoles.add(role);
             }
         }
 
         user.setRoles(selectedRoles);
-        userRepository.save(user);
+        userService.save(user);
 
         return "redirect:/admin";
     }
@@ -71,9 +71,9 @@ public class AdminController {
 
     @GetMapping("/updateUser")
     public String updateUser(Model model, @RequestParam("userID") Long id) {
-        User user = userRepository.getById(id);
+        User user = userService.getById(id);
         model.addAttribute("user", user);
-        model.addAttribute("allRoles", roleRepository.findAll());
+        model.addAttribute("allRoles", roleService.findAll());
         return "addOrUpdateUser";
 
     }

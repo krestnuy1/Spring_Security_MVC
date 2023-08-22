@@ -5,10 +5,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
 import ru.katsevich.spring.boot_security.entities.User;
-import ru.katsevich.spring.boot_security.repository.RoleRepository;
-import ru.katsevich.spring.boot_security.repository.UserRepository;
+import ru.katsevich.spring.boot_security.services.UserService;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
@@ -17,17 +17,10 @@ import java.util.Set;
 @Controller
 public class MainController {
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-
+    private UserService userService;
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -37,7 +30,7 @@ public class MainController {
 
     @GetMapping("/user")
     public String userPage(Model model, Principal principal, Authentication authentication) {
-        User user = userRepository.findByUsername(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
@@ -46,8 +39,8 @@ public class MainController {
 
     @GetMapping("/admin")
     public String adminPage(Model model, Principal principal) {
-        List<User> users = userRepository.findAll();
-        User user = userRepository.findByUsername(principal.getName());
+        List<User> users = userService.findAll();
+        User user = userService.findByUsername(principal.getName());
         model.addAttribute("thisUser", user);
         model.addAttribute("allUsers", users);
         return "adminPage";

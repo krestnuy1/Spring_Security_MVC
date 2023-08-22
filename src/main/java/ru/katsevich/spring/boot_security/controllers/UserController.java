@@ -13,6 +13,9 @@ import ru.katsevich.spring.boot_security.entities.Role;
 import ru.katsevich.spring.boot_security.entities.User;
 import ru.katsevich.spring.boot_security.repository.RoleRepository;
 import ru.katsevich.spring.boot_security.repository.UserRepository;
+import ru.katsevich.spring.boot_security.services.RoleService;
+import ru.katsevich.spring.boot_security.services.UserService;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,21 +25,20 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepository;
-
-    private RoleRepository roleRepository;
+    private UserService userService;
+    private RoleService roleService;
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @GetMapping("/updateUser")
     public String updateUser(Model model, @RequestParam("userID") Long id) {
-        User user = userRepository.getById(id);
+        User user = userService.getById(id);
         model.addAttribute("user", user);
         model.addAttribute("userRoles", user.getRoles());
         return "UpdateUser";
@@ -48,22 +50,22 @@ public class UserController {
                                  BindingResult result,
                                  @RequestParam("selectedRoleIds") List<Long> selectedRoleIds,
                                  Model model) {
-        User user1 = userRepository.getById(user.getId());
+        User user1 = userService.getById(user.getId());
         Set<Role> currentRoles = user1.getRoles();
         if (result.hasErrors()) {
-            model.addAttribute("allRoles", roleRepository.findAll());
+            model.addAttribute("allRoles", roleService.findAll());
             return "addOrUpdateUser";
         }
         Set<Role> selectedRoles = new HashSet<>();
         for (Long roleId : selectedRoleIds) {
-            Role role = roleRepository.findById(roleId).orElse(null);
+            Role role = roleService.findById(roleId).orElse(null);
             if (role != null) {
                 selectedRoles.add(role);
             }
         }
 
         user.setRoles(currentRoles);
-        userRepository.save(user);
+        userService.save(user);
 
         return "redirect:/user";
     }

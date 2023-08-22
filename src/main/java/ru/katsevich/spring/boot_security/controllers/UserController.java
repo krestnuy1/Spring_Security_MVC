@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.katsevich.spring.boot_security.entities.Role;
 import ru.katsevich.spring.boot_security.entities.User;
-import ru.katsevich.spring.boot_security.repository.RoleRepository;
-import ru.katsevich.spring.boot_security.repository.UserRepository;
 import ru.katsevich.spring.boot_security.services.RoleService;
 import ru.katsevich.spring.boot_security.services.UserService;
 
@@ -28,11 +26,8 @@ public class UserController {
     private UserService userService;
     private RoleService roleService;
     @Autowired
-    public void setUserService(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
-    }
-    @Autowired
-    public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
 

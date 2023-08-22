@@ -19,7 +19,7 @@ public class MainController {
 
     private UserService userService;
     @Autowired
-    public void setUserService(UserService userService) {
+    public MainController(UserService userService) {
         this.userService = userService;
     }
 

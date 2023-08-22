@@ -20,13 +20,9 @@ public class AdminController {
 
     private UserService userService;
     private RoleService roleService;
-
     @Autowired
-    public void setUserService(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
-    }
-    @Autowired
-    public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
 
